@@ -1,0 +1,46 @@
+version: 2
+
+updates:
+  # npm/pnpm dependencies
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'chore(deps)'
+    # รวม dependency ที่มักอัปพร้อมกันไว้ใน PR เดียว ไม่งั้นจะได้ PR ทีละสิบใบ
+    groups:
+      svelte:
+        patterns:
+          - 'svelte*'
+          - '@sveltejs/*'
+      testing:
+        patterns:
+          - 'vitest'
+          - '@vitest/*'
+          - 'vitest-browser-*'
+          - 'playwright'
+          - '@playwright/*'
+      linting:
+        patterns:
+          - 'eslint*'
+          - '@eslint/*'
+          - 'typescript-eslint'
+          - 'prettier*'
+      minor-and-patch:
+        # ที่เหลือทั้งหมด รวมเป็นใบเดียวถ้าเป็นแค่ minor/patch
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+
+  # เวอร์ชันของ action ที่ใช้ใน workflow (actions/checkout@v5 ฯลฯ)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'chore(ci)'

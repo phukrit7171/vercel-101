@@ -164,7 +164,10 @@ git push --delete origin v0.2.0    # ลบบน remote
 
 ## 7.6 ของที่ควรทำต่อ ถ้าจะเอาไปใช้จริง
 
-- **Dependabot / Renovate** อัปเดต dependency อัตโนมัติแล้วให้ CI ตรวจให้
+- **Dependabot** — repo นี้ตั้งไว้แล้วที่ `.github/dependabot.yml` เปิดใช้แค่วางไฟล์
+  ไม่ต้องกดอะไรใน dashboard มันจะเปิด PR ให้ทุกสัปดาห์แล้ว CI ตรวจให้เอง
+  จุดสำคัญคือ **จัดกลุ่ม** (`groups:`) ไม่งั้นจะได้ PR ทีละสิบใบจนไม่มีใครอยากดู
+  วิธีรับมือ alert อยู่ใน[บทที่ 8](/docs/troubleshooting)
 - **`actions/dependency-review-action`** เตือนเมื่อ PR เพิ่ม dependency ที่มีช่องโหว่
 - **Lighthouse CI** วัด performance ทุก PR
 - **pin action ด้วย SHA** แทน `@v5` ถ้าอยู่ในองค์กรที่ซีเรียสเรื่อง supply chain
