@@ -17,7 +17,7 @@ jobs:
     name: Version and tag
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # changesets needs the full history to diff against main
 
