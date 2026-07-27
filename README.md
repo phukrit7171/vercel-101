@@ -47,6 +47,7 @@ pnpm test:e2e
 | บท  | เรื่อง                                 | ไฟล์                                                       |
 | --- | -------------------------------------- | ---------------------------------------------------------- |
 | 0   | ภาพรวมและของที่ต้องเตรียม              | [overview.md](src/content/overview.md)                     |
+| 0.5 | ศัพท์และพื้นฐาน git/PR (ข้ามได้)       | [basics.md](src/content/basics.md)                         |
 | 1   | สร้างเว็บ docs ด้วย SvelteKit + mdsvex | [scaffold.md](src/content/scaffold.md)                     |
 | 2   | ด่านคุณภาพในเครื่อง                    | [local-quality.md](src/content/local-quality.md)           |
 | 3   | ตั้ง CI บน GitHub Actions              | [ci.md](src/content/ci.md)                                 |
@@ -55,6 +56,7 @@ pnpm test:e2e
 | 6   | CD ทาง B — GitHub Actions + Vercel CLI | [cd-actions.md](src/content/cd-actions.md)                 |
 | 7   | Branch protection และ rollback         | [branch-protection.md](src/content/branch-protection.md)   |
 | 8   | ปัญหาที่เจอบ่อย                        | [troubleshooting.md](src/content/troubleshooting.md)       |
+| 9   | สรุป best practice + checklist         | [best-practices.md](src/content/best-practices.md)         |
 
 แต่ละบทมีไฟล์ YAML เต็ม ๆ ให้ก๊อปไปใช้ และมีขั้นตอนกดในหน้า GitHub / Vercel
 ทีละคลิก จบด้วยหัวข้อ "✅ เช็คว่าผ่านบทนี้แล้ว"

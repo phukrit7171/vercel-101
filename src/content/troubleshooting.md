@@ -169,7 +169,7 @@ pnpm lint && pnpm check && pnpm test:unit --run && pnpm build
 **เปิด debug log ของ Actions** ตั้ง repository secret `ACTIONS_STEP_DEBUG=true`
 แล้วรันใหม่ จะได้ log ละเอียดกว่าเดิมมาก
 
-## จบแล้ว
+## ต่อไป
 
-กลับไป [บทที่ 0](/docs/overview) เพื่อดูภาพรวมอีกครั้ง
-หรือดูโค้ดจริงทั้งหมดได้ที่ <https://github.com/phukrit7171/vercel-101>
+[บทที่ 9 — สรุป best practice](/docs/best-practices) — รวบหลักการที่ซ่อนอยู่ในทุกบท
+เป็น checklist ที่เอาไปใช้กับโปรเจกต์อื่นได้
