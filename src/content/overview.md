@@ -19,17 +19,32 @@ description: เราจะสร้างอะไร ต้องเตรี
    เปิด Pull Request
         │
         ├─ ci.yml       lint → typecheck → unit test → build → e2e
-        ├─ preview.yml  deploy preview URL ให้ reviewer กด
+        ├─ Preview URL  ให้ reviewer กดดูของจริงก่อน merge
         │
-   merge เข้า main  (branch protection บังคับว่า CI ต้องเขียวก่อน)
+   merge เข้า main  ← 🔒 branch protection: CI ต้องเขียวก่อนถึง merge ได้
         │
         ├─ release.yml  รวม changeset → เปิด "Version Packages" PR
         │               merge PR นั้น → bump version + CHANGELOG + git tag
         │
-        └─ deploy.yml   deploy production (หลัง CI เขียวเท่านั้น)
+        └─ deploy       ขึ้น production
 ```
 
 ตัวเว็บไม่ใช่พระเอก — pipeline ต่างหากที่เป็น ตัวเว็บมีไว้ให้มีของจริงให้ deploy
+
+> **ประโยคสำคัญที่สุดของคอร์สนี้:** ด่านที่มีค่าคือ 🔒 ตรงจังหวะ **merge** ไม่ใช่จังหวะ deploy
+> เพราะโค้ดเสียจะขึ้น production ได้ก็ต้องผ่าน main ก่อน ปิดทางเข้า main ไว้แล้ว
+> เรื่องที่เหลือจะง่ายขึ้นเยอะ
+
+ขั้น deploy ทำได้สองทาง เราจะทำทั้งคู่แล้วเทียบกัน:
+
+|                                     | ใครสั่ง deploy                             | บทที่                         |
+| ----------------------------------- | ------------------------------------------ | ----------------------------- |
+| **ทาง A** (ค่าเริ่มต้นของ repo นี้) | Vercel เองผ่าน Git Integration             | [5](/docs/cd-git-integration) |
+| **ทาง B**                           | `deploy.yml` ผ่าน Vercel CLI หลัง CI เขียว | [6](/docs/cd-actions)         |
+
+เลือกใช้ **ทางเดียว** ต่อหนึ่ง project (เปิดคู่กันจะ deploy ซ้อนทับกัน)
+และสำหรับเว็บแบบนี้ทาง A + branch protection คือคำตอบ — บทที่ 6 มีไว้ให้รู้ว่า
+เมื่อไหร่ถึงจะต้องใช้ทาง B
 
 ## ของที่ต้องมี
 
