@@ -1,0 +1,70 @@
+name: Deploy (production)
+
+# Path B: GitHub Actions owns the deploy, so it can only happen after CI is green.
+# `workflow_run` fires when the CI workflow finishes on main — including when it fails,
+# which is why the job checks the conclusion below.
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy with Vercel CLI
+    runs-on: ubuntu-latest
+    # Opt-in switch: set the repository variable DEPLOY_VIA_ACTIONS to "true" once
+    # the three Vercel secrets exist. Until then this workflow is a no-op and
+    # Vercel's own Git Integration (path A) does the deploying.
+    if: >-
+      vars.DEPLOY_VIA_ACTIONS == 'true' &&
+      (github.event_name == 'workflow_dispatch' ||
+       github.event.workflow_run.conclusion == 'success')
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.url }}
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # workflow_run checks out the default branch by default; pin it to the
+          # exact commit CI validated.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel@latest
+
+      # Pulls the project settings and production environment variables locally.
+      - name: Pull Vercel environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      # Build here rather than on Vercel, so what gets deployed is exactly what
+      # this runner produced from the commit CI tested.
+      - name: Build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy prebuilt output
+        id: deploy
+        run: |
+          url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "🚀 Deployed to $url" >> "$GITHUB_STEP_SUMMARY"

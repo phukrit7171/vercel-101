@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write # create the version commit and the git tag
+  pull-requests: write # open / update the "Version Packages" PR
+
+jobs:
+  release:
+    name: Version and tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # changesets needs the full history to diff against main
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Two modes, decided automatically:
+      #  - unreleased changesets exist  -> opens/updates the "Version Packages" PR
+      #  - that PR was just merged      -> runs `publish` (here: git tag only)
+      - name: Changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm changeset version
+          # This package is private, so there is nothing to publish to npm.
+          # `changeset tag` only creates and pushes the git tag (e.g. v0.2.0).
+          publish: pnpm changeset tag
+          commit: 'chore(release): version packages'
+          title: 'chore(release): version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
