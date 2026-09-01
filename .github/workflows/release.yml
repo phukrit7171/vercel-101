@@ -34,7 +34,7 @@ jobs:
       #  - unreleased changesets exist  -> opens/updates the "Version Packages" PR
       #  - that PR was just merged      -> runs `publish` (here: git tag only)
       - name: Changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           version: pnpm changeset version
           # This package is private, so there is nothing to publish to npm.
